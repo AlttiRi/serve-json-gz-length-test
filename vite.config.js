@@ -10,6 +10,9 @@ import vue from "@vitejs/plugin-vue";
 export default defineConfig({
   plugins: [
     vue(),
+    // cssBundlePlugin({
+    //   overwriteBundle: "style.css"
+    // }),
   ],
   server: {
     open: `./`
@@ -147,11 +150,13 @@ function cssBundlePlugin({callback, overwriteBundle, importFromModule, removeCod
     async generateBundle(opts, bundles, isWrite) {
       const bunchCss = await resultCssBundle();
       if (isWrite && overwriteBundle) {
-        const bundle = Object.values(bundles).find(bundle => bundle.name === overwriteBundle);
+        const bundle = bundles[overwriteBundle] || Object.values(bundles).find(bundle => bundle.name === overwriteBundle);
+        console.log("\n[cssBundlePlugin][debug]: bundles:", Object.keys(bundles));
+        console.log("\n[cssBundlePlugin][debug]: bunchCss:", `"${bunchCss}"`);
         if (bundle) {
           bundle.source = bunchCss;
         } else {
-          console.warn(`\n[cssBundlePlugin]: "${overwriteBundle}" bundle is not found. Available bundles:`, Object.values(bundles).map(bundle => bundle.name));
+          console.warn(`\n[cssBundlePlugin]: "${overwriteBundle}" bundle is not found. Available bundles:`, Object.keys(bundles));
         }
       }
       if (typeof callback === "function") {
