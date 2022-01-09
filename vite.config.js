@@ -137,6 +137,7 @@ function cssBundlePlugin({callback, overwriteBundle, importFromModule, removeCod
     transform(code, id) {
       const isCss = [".css", ".sass", ".scss", ".less", ".stylus"].some(ext => id.endsWith(ext));
       if (isCss) {
+        console.log("\nCCS CODE:", {code, id});
         entries.push({code, id});
         if (removeCode) {
           return {code: "", map: {mappings: ""}};
