@@ -9,7 +9,7 @@ import vue from "@vitejs/plugin-vue";
 
 export default defineConfig({
   plugins: [
-    vue()
+    vue(),
   ],
   server: {
     open: `./`
@@ -114,7 +114,7 @@ function cssBundlePlugin({callback, overwriteBundle, importFromModule, removeCod
           const base64Code = "data:text/javascript;base64," + btoa(trimmedCode);
           css = (await import(base64Code)).default;
         } catch (e) {
-          console.log("Failed to load CSS as a module. Returns as pure code. Use `importFromModule: false`");
+          console.warn("\n[cssBundlePlugin]: Failed to load CSS as a module. Returns as pure code. Use `importFromModule: false`");
           css = code;
         }
       } else {
@@ -137,7 +137,7 @@ function cssBundlePlugin({callback, overwriteBundle, importFromModule, removeCod
     transform(code, id) {
       const isCss = [".css", ".sass", ".scss", ".less", ".stylus"].some(ext => id.endsWith(ext));
       if (isCss) {
-        console.log("\nCCS CODE:", {code, id});
+        console.log("\n[cssBundlePlugin][debug]: CCS CODE:", {code, id});
         entries.push({code, id});
         if (removeCode) {
           return {code: "", map: {mappings: ""}};
@@ -150,6 +150,8 @@ function cssBundlePlugin({callback, overwriteBundle, importFromModule, removeCod
         const bundle = Object.values(bundles).find(bundle => bundle.name === overwriteBundle);
         if (bundle) {
           bundle.source = bunchCss;
+        } else {
+          console.warn(`\n[cssBundlePlugin]: "overwriteBundle" bundle is not found. Available bundles:`, Object.values(bundles).map(bundle => bundle.name));
         }
       }
       if (typeof callback === "function") {
