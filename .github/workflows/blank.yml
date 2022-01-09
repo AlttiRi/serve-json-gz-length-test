@@ -44,7 +44,7 @@ jobs:
           echo "------------------------------------";
           echo "--- Remove files from the folder ---";
           echo "------------------------------------";
-          rm -r "$(ls)";
+          rm -r *;
           fi;
           fi;
           echo "--- Git status ---";
